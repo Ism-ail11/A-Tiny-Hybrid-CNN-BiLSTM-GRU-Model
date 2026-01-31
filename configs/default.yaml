@@ -1,0 +1,63 @@
+seed: 13
+device: auto
+
+data:
+  root: ./data/daisee
+  videos_dir: videos
+  annotations_dir: labels
+  target_fps: 5
+  num_frames: 30
+  img_size: 224
+  brightness_target: 128
+  brightness_strength: 0.7
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+    subject_independent: true
+
+train:
+  epochs: 60
+  batch_size: 16
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  warmup_epochs: 5
+  grad_clip_norm: 1.0
+  early_stop_patience: 10
+  num_workers: 4
+  amp: true
+
+model:
+  num_classes: 4
+  embedding_dim: 256
+  branches:
+    - name: b1
+      cnn_channels: [64, 128]
+      bilstm_hidden: 64
+      gru_hidden: 32
+      fusion_lstm_hidden: 16
+      dropout: 0.2
+    - name: b2
+      cnn_channels: [128, 256]
+      bilstm_hidden: 128
+      gru_hidden: 64
+      fusion_lstm_hidden: 32
+      dropout: 0.3
+    - name: b3
+      cnn_channels: [64, 128]
+      bilstm_hidden: 128
+      gru_hidden: 64
+      fusion_lstm_hidden: 32
+      dropout: 0.4
+
+compression:
+  prune:
+    enabled: true
+    conv_keep_ratio: 0.7   # keep 70% of output channels
+    rnn_keep_ratio: 0.75   # keep 75% of hidden units
+    criterion: l1          # l1 or taylor (taylor needs gradients; optional)
+  quant:
+    enabled: true
+    mode: onnx_dynamic     # onnx_dynamic (fast, easy) or torch_dynamic
+  temp_scaling:
+    enabled: true

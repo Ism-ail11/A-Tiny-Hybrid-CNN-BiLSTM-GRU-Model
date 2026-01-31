@@ -1,0 +1,10 @@
+Place DAiSEE files here.
+
+Expected structure (default config):
+data/daisee/
+  videos/            # video files, named with IDs used in label JSON (mp4/avi/mkv)
+  labels/            # one or more JSON files: { video_id: 'Very Low'/'Low'/'High'/'Very High' } or {video_id: 0..3}
+
+Notes:
+- DAiSEE has usage terms. Download it from the official source and place it locally.
+- If your IDs do not embed subject IDs, edit src/data/splits.py::infer_subject_id to match your naming.
